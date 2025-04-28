@@ -1,5 +1,8 @@
 # ESP32 Based Smart Switch
-![image](https://github.com/user-attachments/assets/7e53fbcb-2700-4a48-b6a7-aa6a3e6c3a13)
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/7e53fbcb-2700-4a48-b6a7-aa6a3e6c3a13" width="50%" height="50%" alt="Left Image">
+  <img src="https://github.com/user-attachments/assets/5fcd1df6-cd47-4a74-ba7c-53bebe964fc8" width="38%" height="38%" alt="Right Image">
+</p> 
 
 # Introduction
 This is a build log and guide on how to make a smart switch controlled by hidden touch switches for use with multiple lamps. This idea came about simply because we grew tired of reaching beneath a desk and under a bed to flip the lamp switches on. So, we came up with a solution to incorporate an ESP32, relay board, and two capacitive touch sensors to control each lamp independently. With the ability to activate the touch sensor through about a quarter inch in material, we hid the touch sensors so a simple tap on the corner of each desk can turn the lamps on. 
@@ -13,13 +16,13 @@ All of the parts used in this project can be easily found on Amazon for a low pr
 - 1x 5V 700mA mini AC-DC converter board
 - 2x 6ft 3 prong extension cables
 
-Originally we were going to use an STM32 microcontroller for this project, but with the board only having 3.3V logic and not 5V our hardware would not function.
+Originally we were going to use an STM32 microcontroller for this project beacuse of the small form factor, but with the board only having 3.3V logic and not 5V our hardware would not function properly.
 
 # Code
 We made our prototype using the Arduino language, then later adapted with C to the ESP32 processor. While C is not going to have significant performance increases due to the nature of the smart switch, we figured it would be a fun challenge to tailor it like an equivalent embedded system found on the market.
 
 ## Arduino Language
-'''cpp
+```cpp 
 int input1 = 22;
 int input2 = 23;
 
@@ -33,7 +36,6 @@ void setup() {
 
   pinMode(output1, OUTPUT);
   pinMode(output2, OUTPUT);
-
 }
 
 void loop() {
@@ -41,12 +43,10 @@ void loop() {
   int state1 = digitalRead(input1);
   int state2 = digitalRead(input2);
 
-
   if (state1 == HIGH) 
   {
     digitalWrite(output1, HIGH);
   }
-
   else
   {
     digitalWrite(output1, LOW);
@@ -56,21 +56,27 @@ void loop() {
   {
     digitalWrite(output2, HIGH);
   }
-
   else
   {
     digitalWrite(output2, LOW);
   }
-}'''
+}
+```
+## C Code
+
 # Enclosure
-In an effort to create an all-in-one unit for reliable usage, we opted to make a single enclosure to house the hardware with Fusion 360.
+In an effort to create an all-in-one unit for reliable usage, we opted to make a single enclosure to house the hardware with Fusion 360. 
+![image](https://github.com/user-attachments/assets/63a24343-9045-4133-96b3-f6aa04de40f6)
+
+The prototype was printed out with PLA with a personal 3D printer.
 
 ## Version 1
-Version 1 of our smart switch incorporates an ESP32, relay board, and two touch sensors for independent operation of two lamps. No network connection is necessary. 
+Version 1 of our smart switch incorporates an ESP32, relay board, and two touch sensors for independent operation of two lamps. No network connection is necessary. <br>
 ![image](https://github.com/user-attachments/assets/7e53fbcb-2700-4a48-b6a7-aa6a3e6c3a13)
 
 ## Version 2
 ![image](https://github.com/user-attachments/assets/bde380b6-c8fd-4679-add4-41384b7a300b)
+<br>
 Version 2 of our smart switch incorporates an ESP32 and a single touch sensor for the operation of smart devices connected to Home Assistant using the ESPHome protocol. We chose Home Assistant and ESPHome because it is an all-in-one open-source software that can easily interact with smart devices. We also designed a smaller enclosure since a relay board was not needed for this model. As all that is going to be housed is an ESP32, a touch sensor, and a step-down transformer board to power the system.
 
 The way this works is through ESPHome, where you can configure the behavior of the ESP32 depending on what is connected. Since we have a single touch sensor to toggle smart devices on or off, we adjusted the yaml file to include a single touch sensor as an input toggle, and the output being the alias device name as shown through Home Assistant. When the yaml file in completed, the code will be translated to C++ and uploaded via the network to our ESP32 system. 
